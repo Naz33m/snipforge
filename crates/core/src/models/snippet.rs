@@ -59,7 +59,9 @@ impl TechStack {
             "ai" | "ml" | "ai/ml" | "aiml" => TechStack::AiMl,
             "mobile" => TechStack::Mobile,
             "git" => TechStack::Git,
-            "data" | "data-engineering" | "data_engineering" => TechStack::DataEngineering,
+            "data" | "data-engineering" | "data_engineering" | "data engineering" => {
+                TechStack::DataEngineering
+            }
             other => TechStack::Custom(other.to_string()),
         }
     }

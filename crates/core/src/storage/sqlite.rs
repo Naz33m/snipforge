@@ -373,6 +373,77 @@ impl SnippetStore for SqliteStorage {
         let count: usize = conn.query_row("SELECT COUNT(*) FROM snippets", [], |row| row.get(0))?;
         Ok(count)
     }
+
+    fn import_snippet(&self, snippet: &Snippet) -> Result<Snippet> {
+        let new_id = uuid::Uuid::new_v4().to_string();
+        let now = chrono::Utc::now();
+
+        let imported = Snippet {
+            id: new_id,
+            title: snippet.title.clone(),
+            description: snippet.description.clone(),
+            fragments: snippet.fragments.clone(),
+            tags: snippet.tags.clone(),
+            tech_stack: snippet.tech_stack.clone(),
+            folder: snippet.folder.clone(),
+            is_favorite: snippet.is_favorite,
+            is_private: snippet.is_private,
+            author: snippet.author.clone(),
+            source_url: snippet.source_url.clone(),
+            created_at: now,
+            updated_at: now,
+        };
+
+        let conn = self
+            .conn
+            .lock()
+            .map_err(|e| SnipForgeError::Storage(format!("Failed to acquire lock: {e}")))?;
+
+        let fragments_json = serde_json::to_string(&imported.fragments)?;
+        let tags_json = serde_json::to_string(&imported.tags)?;
+        let tech_stack_str = imported.tech_stack.as_ref().map(|ts| ts.to_string());
+
+        conn.execute(
+            "INSERT INTO snippets (id, title, description, fragments, tags, tech_stack, folder, is_favorite, is_private, author, source_url, created_at, updated_at)
+             VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
+            params![
+                imported.id,
+                imported.title,
+                imported.description,
+                fragments_json,
+                tags_json,
+                tech_stack_str,
+                imported.folder,
+                imported.is_favorite,
+                imported.is_private,
+                imported.author,
+                imported.source_url,
+                imported.created_at.to_rfc3339(),
+                imported.updated_at.to_rfc3339(),
+            ],
+        )?;
+
+        let content = imported
+            .fragments
+            .iter()
+            .map(|f| f.content.as_str())
+            .collect::<Vec<_>>()
+            .join("\n");
+
+        conn.execute(
+            "INSERT INTO snippets_fts (id, title, description, content, tags)
+             VALUES (?1, ?2, ?3, ?4, ?5)",
+            params![
+                imported.id,
+                imported.title,
+                imported.description,
+                content,
+                imported.tags.join(" "),
+            ],
+        )?;
+
+        Ok(imported)
+    }
 }
 
 #[cfg(test)]

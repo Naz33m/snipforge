@@ -14,4 +14,6 @@ pub trait SnippetStore: Send + Sync {
     fn delete(&self, id: &str) -> Result<()>;
     fn list(&self, filter: SnippetFilter) -> Result<Vec<Snippet>>;
     fn count(&self) -> Result<usize>;
+    /// Import a full snippet (with all fragments) using a new ID.
+    fn import_snippet(&self, snippet: &Snippet) -> Result<Snippet>;
 }

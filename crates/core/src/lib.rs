@@ -103,30 +103,14 @@ impl SnipForge {
         Ok(serde_json::to_string_pretty(&snippets)?)
     }
 
-    /// Import snippets from JSON.
+    /// Import snippets from JSON, preserving all fragments.
     pub fn import_json(&self, json: &str) -> Result<usize> {
         let snippets: Vec<Snippet> = serde_json::from_str(json)?;
         let mut count = 0;
 
-        for snippet in snippets {
-            let primary_lang = snippet.primary_language().to_string();
-            let primary_content = snippet
-                .fragments
-                .first()
-                .map(|f| f.content.clone())
-                .unwrap_or_default();
-
-            let params = CreateSnippetParams {
-                title: snippet.title,
-                description: snippet.description,
-                language: primary_lang,
-                content: primary_content,
-                tags: snippet.tags,
-                tech_stack: snippet.tech_stack,
-                folder: snippet.folder,
-            };
-
-            self.create_snippet(params)?;
+        for snippet in &snippets {
+            let imported = self.store.import_snippet(snippet)?;
+            self.search.index_snippet(&imported)?;
             count += 1;
         }
 
