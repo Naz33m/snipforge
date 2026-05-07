@@ -1,0 +1,36 @@
+# Rust
+/target/
+**/*.rs.bk
+Cargo.lock
+
+# Node / Frontend
+node_modules/
+dist/
+.next/
+*.tsbuildinfo
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+*.secrets
+
+# Database (local dev)
+*.db
+*.db-journal
+*.db-wal
+
+# Tauri
+desktop/src-tauri/target/
+desktop/src-tauri/WixTools/
+desktop/src-tauri/icons/
