@@ -33,4 +33,3 @@ Thumbs.db
 # Tauri
 desktop/src-tauri/target/
 desktop/src-tauri/WixTools/
-desktop/src-tauri/icons/
