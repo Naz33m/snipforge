@@ -32,13 +32,13 @@ Snippets organized by technology ecosystem:
 - Usage analytics
 - Real-time sync via CRDTs
 
-### Cross-Platform (Roadmap)
-- Desktop app (Tauri 2.0)
-- VS Code extension
-- JetBrains plugin
-- CLI tool
-- Browser extension
-- MCP Server for AI assistants
+### Cross-Platform
+- **Desktop app** (Tauri 2.0 + React) — fully wired to core engine
+- **CLI tool** — full-featured terminal interface
+- VS Code extension (roadmap)
+- JetBrains plugin (roadmap)
+- Browser extension (roadmap)
+- MCP Server for AI assistants (roadmap)
 
 ## Quick Start
 
@@ -85,6 +85,37 @@ snipforge import my-snippets.json
 snipforge stats
 ```
 
+## Desktop App
+
+The desktop app provides a full GUI for managing snippets, powered by [Tauri 2.0](https://tauri.app/) + React.
+
+### Prerequisites
+
+- **Rust 1.85+** (install via [rustup.rs](https://rustup.rs/))
+- **Node.js 18+** (install via [nvm](https://github.com/nvm-sh/nvm) or [nodejs.org](https://nodejs.org/))
+- **System dependencies** (Linux only):
+  ```bash
+  sudo apt install libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+  ```
+
+### Run the Desktop App
+
+```bash
+cd desktop
+npm install
+npx tauri dev
+```
+
+This will build the Rust backend and launch the desktop window with the React UI connected to the full snipforge-core engine.
+
+### Features
+- **Add snippets** — form with title, language, code, description, tags, tech stack
+- **Search** — full-text search powered by SQLite FTS5
+- **Browse** — filter by tech stack, view all snippets
+- **Detail view** — see all fragments, metadata, and tags
+- **Favorite** — toggle favorite status
+- **Delete** — remove snippets
+
 ## Architecture
 
 ```
@@ -92,11 +123,11 @@ snipforge/
 ├── crates/
 │   ├── core/          # Rust core library (models, storage, search, AI)
 │   └── cli/           # CLI application
-├── desktop/           # Tauri desktop app (planned)
-│   ├── src-tauri/     # Rust backend
+├── desktop/           # Tauri 2.0 desktop app
+│   ├── src-tauri/     # Rust backend (Tauri commands)
 │   └── src/           # React frontend
 ├── extensions/
-│   └── vscode/        # VS Code extension (planned)
+│   └── vscode/        # VS Code extension (scaffold)
 └── docs/              # Documentation
 ```
 
@@ -107,14 +138,14 @@ snipforge/
 | Core engine | Rust |
 | Local storage | SQLite (WAL mode) + FTS5 |
 | Search | Keyword (FTS5) + Semantic (planned: LanceDB + CodeBERT) |
-| Desktop | Tauri 2.0 + React (planned) |
+| Desktop | Tauri 2.0 + React |
 | CLI | Rust + clap |
 | Sync | CRDTs via Yrs (planned) |
 
 ## Development
 
 ```bash
-# Run tests
+# Run tests (core + CLI)
 cargo test
 
 # Run with logging
@@ -125,6 +156,12 @@ cargo clippy --all-targets
 
 # Format code
 cargo fmt
+
+# Build desktop Rust backend (from desktop/src-tauri/)
+cd desktop/src-tauri && cargo build
+
+# Build desktop frontend (from desktop/)
+cd desktop && npm run build
 ```
 
 ## Roadmap
@@ -135,7 +172,7 @@ cargo fmt
 - [x] CLI tool with add, search, list, show, delete, export, import
 - [x] Rule-based language detection and sensitive data scanning
 - [ ] On-device semantic search (LanceDB + CodeBERT embeddings)
-- [ ] Tauri desktop application
+- [x] Tauri desktop application (wired to core engine)
 - [ ] VS Code extension
 - [ ] Team workspaces and cloud sync
 - [ ] MCP Server for AI assistant integration
