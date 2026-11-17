@@ -142,6 +142,10 @@ cargo fmt
 - [ ] Curated tech-stack starter collections
 - [ ] Snippet marketplace
 
+## Credits
+
+Built with help from Devin AI.
+
 ## License
 
 MIT — see [LICENSE](LICENSE) for details.
