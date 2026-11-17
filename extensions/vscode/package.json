@@ -1,0 +1,50 @@
+{
+  "name": "snipforge-vscode",
+  "displayName": "SnipForge",
+  "description": "AI-powered code snippet manager — search, save, and share snippets from VS Code",
+  "version": "0.1.0",
+  "publisher": "snipforge",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Snippets", "Other"],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "snipforge.search",
+        "title": "SnipForge: Search Snippets"
+      },
+      {
+        "command": "snipforge.save",
+        "title": "SnipForge: Save Selection as Snippet"
+      },
+      {
+        "command": "snipforge.list",
+        "title": "SnipForge: Browse Snippets"
+      },
+      {
+        "command": "snipforge.insert",
+        "title": "SnipForge: Insert Snippet"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "snipforge.search",
+        "key": "ctrl+shift+s",
+        "mac": "cmd+shift+s"
+      }
+    ]
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.6.0"
+  }
+}

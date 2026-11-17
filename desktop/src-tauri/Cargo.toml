@@ -1,0 +1,16 @@
+[package]
+name = "snipforge-desktop"
+version = "0.1.0"
+edition = "2021"
+description = "SnipForge Desktop — AI-powered code snippet manager"
+
+# NOTE: This crate is not yet part of the workspace.
+# It will be added once Tauri 2.0 dependencies are configured.
+# For now, it serves as a scaffold for the desktop app.
+
+[dependencies]
+# tauri = { version = "2", features = [] }
+# tauri-plugin-shell = "2"
+snipforge-core = { path = "../../crates/core" }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
